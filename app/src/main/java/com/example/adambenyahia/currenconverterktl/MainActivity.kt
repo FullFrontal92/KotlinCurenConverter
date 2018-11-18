@@ -3,9 +3,10 @@ package com.example.adambenyahia.currenconverterktl
 import android.os.AsyncTask
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONObject
 import java.io.InputStreamReader
-import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.URL
 import kotlin.Exception
@@ -16,13 +17,21 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+    }
+
+    fun get (view: View){
         val downloadData = Download()
 
         try {
-            val url = ""
+            val url = "http://api.fixer.io/latest?base="
+            val chosenBase = editText.text.toString()
+
+            downloadData.execute(url+chosenBase)
         } catch (e: Exception){
             e.printStackTrace()
         }
+
+
     }
 
 
@@ -64,6 +73,23 @@ class MainActivity : AppCompatActivity() {
 
             try {
                 val jsonObject = JSONObject(result)
+                println(jsonObject)
+                val base = jsonObject.getString("base")
+                println(base)
+                val date = jsonObject.getString("date")
+                println(date)
+                val rates = jsonObject.getString("rates")
+                println(rates)
+
+                val newJSONObject  = JSONObject(rates)
+                val eur = newJSONObject.getString("EUR")
+                println(eur)
+                val usd = newJSONObject.getString("USD")
+                val gbp = newJSONObject.getString("GBP")
+
+                eurText.text = "EUR" + eur
+                usdText.text = "USD" + usd
+                gbpText.text = "GBP" + gbp
             } catch (e: Exception){
                 e.printStackTrace()
             }
